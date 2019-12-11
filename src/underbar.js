@@ -333,21 +333,14 @@
     //once-makes sure that functions are called at most one time
     //memoize-return a function that when called will check if the result has already been computed and if not will return the value instead
     var result = {};
-    var args = JSON.stringify(arguments);
 
     return function() {
-      if (result[args]) {
-        return result[args];
-      } else {
+      var args = JSON.stringify(arguments);
+      if (!result[args]) {
         result[args] = func.apply(this, arguments);
-        return result[args];
       }
+      return result[args];
     };
-
-
-
-
-
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -357,8 +350,17 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-
-
+    var funcArgs = '';
+    for (var n = 2; n < arguments.length; n++) {
+      if (n === arguments.length-1) {
+        funcArgs += arguments[n];
+      } else {
+        funcArgs += arguments[n] + ', ';
+      }
+    }
+    setTimeout(function() {
+      return func(funcArgs); // not working :(, expecting funcArgs === ('a', 'b')
+    }, wait);
   };
 
 
@@ -373,6 +375,12 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var newArray = array.slice();
+    for (var i = newArray.length-1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i+1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
   };
 
 
