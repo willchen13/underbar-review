@@ -500,7 +500,7 @@
         expect(result).to.equal(4);
       });
 
-      it('should continue to call the iterator even if the iterator returns 0', function() {
+      it('should continue to call the iterator even if the iterator returns falsy', function() {
         var result = _.reduce([1, 2, 3], function(memo, item) {
           return memo * item;
         }, 0);
